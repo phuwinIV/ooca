@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import { items } from '../data/items';
 
-export function useShoppingCart() {
+interface UseShoppingCartProps {
+  isValidMember: boolean;
+}
+
+export function useShoppingCart({ isValidMember }: UseShoppingCartProps) {
   const [selectedItems, setSelectedItems] = useState<Map<string, number>>(
     new Map()
   );
-  const [memberCard, setMemberCard] = useState<string>('');
-
-  const isMember = memberCard.trim() !== '';
 
   const toggleItem = (item: string) => {
     const newSelected = new Map(selectedItems);
@@ -40,6 +41,8 @@ export function useShoppingCart() {
 
   const getTotalPrice = () => {
     let total = 0;
+    let discountMessage = '';
+
     selectedItems.forEach((count, item) => {
       const selectedItem = items.find((i) => i.name === item);
       if (selectedItem) {
@@ -51,27 +54,30 @@ export function useShoppingCart() {
           ['Orange Set', 'Pink Set', 'Green Set'].includes(item)
         ) {
           itemTotal *= 0.95;
+          discountMessage += `5% discount applied on ${item}. `;
         }
 
         // Apply a 10% discount for members
-        if (isMember) {
+        if (isValidMember) {
           itemTotal *= 0.9;
+          discountMessage += '10% member discount applied. ';
         }
 
         total += itemTotal;
       }
     });
-    return total.toFixed(2);
+
+    return {
+      total: total.toFixed(2),
+      discountMessage: discountMessage.trim(),
+    };
   };
 
   return {
     selectedItems,
-    memberCard,
-    setMemberCard,
     toggleItem,
     removeItem,
     clearAll,
     getTotalPrice,
-    isMember, // Expose for UI purposes
   };
 }
