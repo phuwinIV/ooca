@@ -7,7 +7,7 @@ import MembershipForm from './MemberInput';
 import { items } from '../data/items';
 import { useState } from 'react';
 
-export function ShoppingCartClient() {
+export function ShopingCartClient() {
   const [showInvoice, setShowInvoice] = useState(false);
   const [isValidMember, setIsValidMember] = useState(false);
   const [memberDetails, setMemberDetails] = useState<{
@@ -15,11 +15,12 @@ export function ShoppingCartClient() {
     name: string;
   } | null>(null);
 
-  // Pass isValidMember to the hook
   const { selectedItems, toggleItem, removeItem, clearAll, getTotalPrice } =
     useShoppingCart({ isValidMember });
 
-  const { total, discountMessage } = getTotalPrice();
+  const hasItems = selectedItems.size > 0;
+
+  const { total, discountSet } = getTotalPrice();
 
   const handleMembershipChange = (isMember: boolean) => {
     if (!isMember) {
@@ -93,7 +94,7 @@ export function ShoppingCartClient() {
             </span>
           )}
         </h3>
-        {selectedItems.size > 0 && (
+        {hasItems && (
           <button
             onClick={handlePay}
             className='mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors'
@@ -107,26 +108,72 @@ export function ShoppingCartClient() {
         <div className='mt-6 p-4 border rounded'>
           <h2 className='text-2xl font-bold mb-4'>Invoice</h2>
           <ul className='space-y-2'>
-            {Array.from(selectedItems.entries()).map(([item, count]) => (
-              <li key={item} className='flex justify-between'>
-                <span>
-                  {item} x{count}
-                </span>
-                <span className='font-medium'>
-                  ฿{(items.find((i) => i.name === item)?.price || 0) * count}
-                </span>
-              </li>
-            ))}
+            {Array.from(selectedItems.entries()).map(([item, count]) => {
+              const itemData = items.find((i) => i.name === item);
+              const price = itemData?.price || 0;
+              const itemTotal = price * count;
+
+              return (
+                <li key={item} className='flex justify-between'>
+                  <span>
+                    {item} x{count}
+                  </span>
+                  <span className='font-medium'>฿{itemTotal.toFixed(2)}</span>
+                </li>
+              );
+            })}
           </ul>
           <div className='mt-4 pt-4 border-t'>
-            {isValidMember && (
-              <div className='text-green-600 text-right mb-2'>
-                Member Discount: -10%
-              </div>
-            )}
+            {/* Calculate and display discount amounts */}
+            {(() => {
+              let discountAmount = 0;
+              let memberDiscountAmount = 0;
+              let setDiscountAmount = 0;
+
+              // Calculate discounts
+              if (isValidMember) {
+                memberDiscountAmount = total * 0.1; // 10% discount for members
+                discountAmount += memberDiscountAmount;
+              }
+              if (discountSet) {
+                setDiscountAmount = (total - memberDiscountAmount) * 0.05; // 5% discount on the remaining amount
+                discountAmount += setDiscountAmount;
+              }
+
+              return (
+                <>
+                  {isValidMember && (
+                    <div className='text-green-600 text-right mb-2'>
+                      Member Discount: -฿{memberDiscountAmount.toFixed(2)}
+                    </div>
+                  )}
+                  {discountSet && (
+                    <div className='text-blue-600 text-right mb-2'>
+                      Set Discount: -฿{setDiscountAmount.toFixed(2)}
+                    </div>
+                  )}
+                  {discountAmount > 0 && (
+                    <div className='text-right text-gray-800 font-medium'>
+                      Total Discounts: -฿{discountAmount.toFixed(2)}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
+
+            {/* Final total price */}
             <h3 className='text-xl font-bold text-right'>
-              <p>Total Price: {total}</p>
-              {discountMessage && <p>{discountMessage}</p>}
+              Final Total: ฿
+              {(() => {
+                let finalTotal = total;
+                if (isValidMember) {
+                  finalTotal *= 0.9; // Apply 10% member discount
+                }
+                if (discountSet) {
+                  finalTotal *= 0.95; // Apply 5% set discount
+                }
+                return finalTotal;
+              })()}
             </h3>
           </div>
         </div>

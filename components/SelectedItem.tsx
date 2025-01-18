@@ -1,5 +1,4 @@
 import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
 
 interface SelectedItemsProps {
   selectedItems: Map<string, number>;
@@ -28,7 +27,7 @@ export function SelectedItems({
               className='hover:bg-gray-200 rounded-full p-1'
               aria-label={`Remove ${item}`}
             >
-              <X size={12} />
+              x
             </button>
           </Badge>
         ))}

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { CreditCard, CheckCircle2, XCircle } from 'lucide-react';
+// import { CreditCard, CheckCircle2, XCircle } from 'lucide-react';
 
 interface MembershipFormProps {
   onMembershipChange: (isMember: boolean) => void;
@@ -66,7 +66,7 @@ const MembershipForm = ({
     <Card className='w-full max-w-md'>
       <CardHeader>
         <CardTitle className='flex items-center space-x-2'>
-          <CreditCard className='h-5 w-5' />
+          {/* <CreditCard className='h-5 w-5' /> */}
           <span>Membership Details</span>
         </CardTitle>
       </CardHeader>
@@ -109,14 +109,14 @@ const MembershipForm = ({
                 <div className='flex items-center space-x-2'>
                   {isMemberCorrect ? (
                     <>
-                      <CheckCircle2 className='h-5 w-5 text-green-500' />
+                      {/* <CheckCircle2 className='h-5 w-5 text-green-500' /> */}
                       <AlertDescription className='text-green-700'>
                         Welcome back, {currentMember?.name}!
                       </AlertDescription>
                     </>
                   ) : (
                     <>
-                      <XCircle className='h-5 w-5 text-red-500' />
+                      {/* <XCircle className='h-5 w-5 text-red-500' /> */}
                       <AlertDescription className='text-red-700'>
                         Invalid membership number. Please try again.
                       </AlertDescription>

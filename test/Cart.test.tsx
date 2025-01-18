@@ -1,40 +1,99 @@
-import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
-import ShopingCartClient from '@/components/ShopingCartClient';
+import { ShopingCartClient } from '@/components/ShopingCartClient';
 
-describe('ShopingCartClient component', () => {
-  const selectedItems = new Map([
-    ['item1', 2],
-    ['item2', 3],
-  ]);
+// Mock the useShoppingCart hook
+jest.mock('../hook/useShopingCart', () => ({
+  useShoppingCart: jest.fn(),
+}));
 
-  const getTotalPrice = jest.fn(() => 500);
+// Import the mocked module
+import { useShoppingCart } from '../hook/useShopingCart';
 
-  it('should render invoice when showInvoice is true', () => {
-    render(
-      <ShopingCartClient
-        showInvoice={true}
-        selectedItems={selectedItems}
-        getTotalPrice={getTotalPrice}
-      />
-    );
+describe('ShopingCartClient Price and Discount Tests', () => {
+  const mockedUseShoppingCart = useShoppingCart as jest.Mock;
 
-    expect(screen.getByText('Invoice')).toBeInTheDocument();
-    expect(screen.getByText('item1 x2')).toBeInTheDocument();
-    expect(screen.getByText('item2 x3')).toBeInTheDocument();
-    expect(screen.getByText('Total: ฿500')).toBeInTheDocument();
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should not render invoice when showInvoice is false', () => {
-    render(
-      <ShopingCartClient
-        showInvoice={false}
-        selectedItems={selectedItems}
-        getTotalPrice={getTotalPrice}
-      />
-    );
+  it('should display correct total price without any discounts', () => {
+    mockedUseShoppingCart.mockImplementation(() => ({
+      selectedItems: new Map([['Orange Set', 1]]),
+      toggleItem: jest.fn(),
+      removeItem: jest.fn(),
+      clearAll: jest.fn(),
+      getTotalPrice: () => ({
+        total: '100.00',
+        discountSet: false,
+        discountMember: false,
+      }),
+    }));
 
-    expect(screen.queryByText('Invoice')).not.toBeInTheDocument();
+    render(<ShopingCartClient />);
+    expect(screen.getByText(/Total Price: 100.00/)).toBeInTheDocument();
+  });
+
+  it('should apply set discount when buying multiple sets', () => {
+    mockedUseShoppingCart.mockImplementation(() => ({
+      selectedItems: new Map([['Orange Set', 2]]),
+      toggleItem: jest.fn(),
+      removeItem: jest.fn(),
+      clearAll: jest.fn(),
+      getTotalPrice: () => ({
+        total: '240.00',
+        discountSet: true,
+        discountMember: false,
+      }),
+    }));
+
+    render(<ShopingCartClient />);
+    fireEvent.click(screen.getByText(/Pay/i));
+
+    // Check if set discount is displayed correctly
+    expect(screen.getByText(/Set Discount: -฿12.00/)).toBeInTheDocument();
+    expect(screen.getByText(/Final Total: ฿228/)).toBeInTheDocument();
+  });
+
+  it('should handle empty cart correctly', () => {
+    mockedUseShoppingCart.mockImplementation(() => ({
+      selectedItems: new Map(),
+      toggleItem: jest.fn(),
+      removeItem: jest.fn(),
+      clearAll: jest.fn(),
+      getTotalPrice: () => ({
+        total: '0.00',
+        discountSet: false,
+        discountMember: false,
+      }),
+    }));
+
+    render(<ShopingCartClient />);
+    expect(screen.getByText(/Total Price: 0.00/)).toBeInTheDocument();
+    expect(screen.queryByText(/Pay/)).not.toBeInTheDocument();
+  });
+
+  it('should clear all items correctly', () => {
+    const mockClearAll = jest.fn();
+    mockedUseShoppingCart.mockImplementation(() => ({
+      selectedItems: new Map([
+        ['Orange Set', 1],
+        ['Green Set', 1],
+      ]),
+      toggleItem: jest.fn(),
+      removeItem: jest.fn(),
+      clearAll: mockClearAll,
+      getTotalPrice: () => ({
+        total: '200.00',
+        discountSet: false,
+        discountMember: false,
+      }),
+    }));
+
+    render(<ShopingCartClient />);
+    const clearButton = screen.getByText('Clear All');
+    fireEvent.click(clearButton);
+
+    expect(mockClearAll).toHaveBeenCalled();
   });
 });

@@ -42,33 +42,43 @@ export function useShoppingCart({ isValidMember }: UseShoppingCartProps) {
   const getTotalPrice = () => {
     let total = 0;
     let discountMessage = '';
+    let discountSet = false;
+    let discountMember = false;
 
     selectedItems.forEach((count, item) => {
       const selectedItem = items.find((i) => i.name === item);
       if (selectedItem) {
-        let itemTotal = selectedItem.price * count;
+        const itemTotal = selectedItem.price * count;
 
-        // Apply a 5% discount for certain items if count >= 2
+        // Check if the item is eligible for a 5% discount
         if (
           count >= 2 &&
           ['Orange Set', 'Pink Set', 'Green Set'].includes(item)
         ) {
-          itemTotal *= 0.95;
-          discountMessage += `5% discount applied on ${item}. `;
-        }
-
-        // Apply a 10% discount for members
-        if (isValidMember) {
-          itemTotal *= 0.9;
-          discountMessage += '10% member discount applied. ';
+          discountSet = true;
         }
 
         total += itemTotal;
       }
     });
 
+    // Apply a 5% discount to the total price if eligible
+    if (discountSet) {
+      //   total *= 0.95;
+      discountMessage += '5% discount applied on eligible items. ';
+    }
+
+    // Apply a 10% discount for members to the total price
+    if (isValidMember) {
+      // total *= 0.9;
+      discountMember = true;
+      discountMessage += '10% member discount applied. ';
+    }
+
     return {
-      total: total.toFixed(2),
+      total: total,
+      discountMember,
+      discountSet,
       discountMessage: discountMessage.trim(),
     };
   };
