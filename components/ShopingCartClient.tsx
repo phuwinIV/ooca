@@ -142,24 +142,24 @@ export function ShopingCartClient() {
                 <>
                   {isValidMember && (
                     <div className='text-rose-600 text-right mb-2'>
-                      Member Discount: ฿{memberDiscountAmount.toFixed(2)}
+                      Member Discount: ฿{memberDiscountAmount.toFixed(1)}
                     </div>
                   )}
                   {discountSet && (
                     <div className='text-rose-600 text-right mb-2'>
-                      Set Discount: ฿{setDiscountAmount.toFixed(2)}
+                      Set Discount: ฿{setDiscountAmount.toFixed(1)}
                     </div>
                   )}
                   {discountAmount > 0 && (
                     <div className='text-right text-gray-800 font-medium'>
-                      Total Discounts: ฿{discountAmount.toFixed(2)}
+                      Total Discounts: ฿{discountAmount.toFixed(1)}
                     </div>
                   )}
                 </>
               );
             })()}
 
-            <h3 className='text-xl font-bold text-right'>
+            <h3 className='text-xl mt-2 font-bold text-right'>
               Price: ฿
               {(() => {
                 let finalTotal = total;
