@@ -44,7 +44,7 @@ export function ShopingCartClient() {
   return (
     <>
       <div className='flex justify-between items-center'>
-        <h2 className='text-2xl font-bold tracking-tight'>Choose Your Sets</h2>
+        <h2 className='text-2xl font-bold tracking-tight'>Choose Your Set</h2>
         {selectedItems.size > 0 && (
           <button onClick={clearAll}>Clear All</button>
         )}
