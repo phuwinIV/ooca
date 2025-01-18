@@ -50,7 +50,6 @@ export function useShoppingCart({ isValidMember }: UseShoppingCartProps) {
       if (selectedItem) {
         const itemTotal = selectedItem.price * count;
 
-        // Check if the item is eligible for a 5% discount
         if (
           count >= 2 &&
           ['Orange Set', 'Pink Set', 'Green Set'].includes(item)
@@ -62,13 +61,11 @@ export function useShoppingCart({ isValidMember }: UseShoppingCartProps) {
       }
     });
 
-    // Apply a 5% discount to the total price if eligible
     if (discountSet) {
       //   total *= 0.95;
       discountMessage += '5% discount applied on eligible items. ';
     }
 
-    // Apply a 10% discount for members to the total price
     if (isValidMember) {
       // total *= 0.9;
       discountMember = true;

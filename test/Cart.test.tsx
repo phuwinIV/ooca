@@ -2,12 +2,10 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ShopingCartClient } from '@/components/ShopingCartClient';
 
-// Mock the useShoppingCart hook
 jest.mock('../hook/useShopingCart', () => ({
   useShoppingCart: jest.fn(),
 }));
 
-// Import the mocked module
 import { useShoppingCart } from '../hook/useShopingCart';
 
 describe('ShopingCartClient Price and Discount Tests', () => {

@@ -19,7 +19,7 @@ describe('MembershipForm Component', () => {
       />
     );
 
-    expect(screen.getByText('Membership Details')).toBeInTheDocument();
+    expect(screen.getByText('Membership')).toBeInTheDocument();
     expect(screen.getByLabelText('I am a member')).toBeInTheDocument();
   });
 
@@ -49,9 +49,7 @@ describe('MembershipForm Component', () => {
     fireEvent.click(checkbox);
 
     expect(
-      screen.getByPlaceholderText(
-        'Enter your membership card number (e.g., 123)'
-      )
+      screen.getByPlaceholderText('Enter your membership card number (123)')
     ).toBeInTheDocument();
   });
 
@@ -67,7 +65,7 @@ describe('MembershipForm Component', () => {
     fireEvent.click(checkbox);
 
     const input = screen.getByPlaceholderText(
-      'Enter your membership card number (e.g., 123)'
+      'Enter your membership card number (123)'
     );
     fireEvent.change(input, { target: { value: '123' } });
 
@@ -89,7 +87,7 @@ describe('MembershipForm Component', () => {
     fireEvent.click(checkbox);
 
     const input = screen.getByPlaceholderText(
-      'Enter your membership card number (e.g., 123)'
+      'Enter your membership card number (123)'
     );
     fireEvent.change(input, { target: { value: '999' } });
 
@@ -108,7 +106,7 @@ describe('MembershipForm Component', () => {
     fireEvent.click(checkbox);
 
     const input = screen.getByPlaceholderText(
-      'Enter your membership card number (e.g., 123)'
+      'Enter your membership card number (123)'
     );
     fireEvent.change(input, { target: { value: '123' } });
 
@@ -127,7 +125,7 @@ describe('MembershipForm Component', () => {
     fireEvent.click(checkbox);
 
     const input = screen.getByPlaceholderText(
-      'Enter your membership card number (e.g., 123)'
+      'Enter your membership card number (123)'
     );
     fireEvent.change(input, { target: { value: '999' } });
 
@@ -148,11 +146,11 @@ describe('MembershipForm Component', () => {
     fireEvent.click(checkbox);
 
     const input = screen.getByPlaceholderText(
-      'Enter your membership card number (e.g., 123)'
+      'Enter your membership card number (123)'
     );
     fireEvent.change(input, { target: { value: '123' } });
 
-    fireEvent.click(checkbox); // Uncheck the checkbox
+    fireEvent.click(checkbox);
 
     expect(input).not.toBeInTheDocument();
     expect(mockOnMembershipChange).toHaveBeenCalledWith(false);

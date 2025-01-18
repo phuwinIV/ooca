@@ -67,7 +67,7 @@ const MembershipForm = ({
       <CardHeader>
         <CardTitle className='flex items-center space-x-2'>
           {/* <CreditCard className='h-5 w-5' /> */}
-          <span>Membership Details</span>
+          <span>Membership</span>
         </CardTitle>
       </CardHeader>
       <CardContent className='space-y-6'>
@@ -95,7 +95,7 @@ const MembershipForm = ({
               <Input
                 id='card-number'
                 value={cardNumber}
-                placeholder='Enter your membership card number (e.g., 123)'
+                placeholder='Enter your membership card number (123)'
                 className={`w-full ${
                   cardNumber &&
                   (isMemberCorrect ? 'border-green-500' : 'border-red-500')

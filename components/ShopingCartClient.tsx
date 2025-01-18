@@ -124,53 +124,50 @@ export function ShopingCartClient() {
             })}
           </ul>
           <div className='mt-4 pt-4 border-t'>
-            {/* Calculate and display discount amounts */}
             {(() => {
               let discountAmount = 0;
               let memberDiscountAmount = 0;
               let setDiscountAmount = 0;
 
-              // Calculate discounts
               if (isValidMember) {
-                memberDiscountAmount = total * 0.1; // 10% discount for members
+                memberDiscountAmount = total * 0.1;
                 discountAmount += memberDiscountAmount;
               }
               if (discountSet) {
-                setDiscountAmount = (total - memberDiscountAmount) * 0.05; // 5% discount on the remaining amount
+                setDiscountAmount = (total - memberDiscountAmount) * 0.05;
                 discountAmount += setDiscountAmount;
               }
 
               return (
                 <>
                   {isValidMember && (
-                    <div className='text-green-600 text-right mb-2'>
-                      Member Discount: -฿{memberDiscountAmount.toFixed(2)}
+                    <div className='text-rose-600 text-right mb-2'>
+                      Member Discount: ฿{memberDiscountAmount.toFixed(2)}
                     </div>
                   )}
                   {discountSet && (
-                    <div className='text-blue-600 text-right mb-2'>
-                      Set Discount: -฿{setDiscountAmount.toFixed(2)}
+                    <div className='text-rose-600 text-right mb-2'>
+                      Set Discount: ฿{setDiscountAmount.toFixed(2)}
                     </div>
                   )}
                   {discountAmount > 0 && (
                     <div className='text-right text-gray-800 font-medium'>
-                      Total Discounts: -฿{discountAmount.toFixed(2)}
+                      Total Discounts: ฿{discountAmount.toFixed(2)}
                     </div>
                   )}
                 </>
               );
             })()}
 
-            {/* Final total price */}
             <h3 className='text-xl font-bold text-right'>
-              Final Total: ฿
+              Price: ฿
               {(() => {
                 let finalTotal = total;
                 if (isValidMember) {
-                  finalTotal *= 0.9; // Apply 10% member discount
+                  finalTotal *= 0.9;
                 }
                 if (discountSet) {
-                  finalTotal *= 0.95; // Apply 5% set discount
+                  finalTotal *= 0.95;
                 }
                 return finalTotal;
               })()}
